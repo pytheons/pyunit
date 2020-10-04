@@ -12,7 +12,7 @@ This library contains tool called `pyunit` to:
 
 ## Installation:
 ```shell script
-user@host $ pip install pyunit
+user@host $ pip install pytheons.pyunit
 ```
 
 ## Usage
