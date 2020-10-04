@@ -1,0 +1,63 @@
+#!/usr/bin/python
+"""
+PyUnit - unittest test runner based on annotation.
+
+Usage: pyunit COMMAND --OPTION <argument>
+  pyunit config init [--path=<path>]
+  pyunit run [--suites=<suites>]
+  pyunit (-h | --help)
+  pyunit --version
+
+Commands:
+  config - Configuration sub-system
+  suites - Tests Suites sub-system
+  run    - Test runner from CLI
+
+Options:
+  -h --help     Show this screen.
+  --version     Show version.
+
+"""
+import sys
+from importlib import import_module
+from docopt import docopt
+from pytheons.pyunit.user_interface.command_line_interface.output.logger import logger
+
+
+class PyUnit:
+
+    def __init__(self) -> None:
+        super().__init__()
+        argv = None
+        if len(sys.argv) <= 1:
+            argv = ['-h']
+        docopt(__doc__, argv=argv, version='PyUnit 1.0.0')
+        try:
+            if len(sys.argv) > 1:
+                command: str = sys.argv[1]
+                command_module_name = command.replace('-', '_')
+                words = list(map(
+                    lambda word: word.capitalize(),
+                    command.replace('_', '-').split('-')
+                ))
+                command_class_name = '{prefix}{suffix}'.format(prefix=''.join(words), suffix='Command')
+                load_module = 'pytheons.pyunit.user_interface.command_line_interface.command.{module}'.format(
+                    module=command_module_name
+                )
+                logger.debug('<Module: %s>', load_module)
+                logger.debug('<Class: %s>', command_class_name)
+
+                try:
+                    module = import_module(load_module)
+                    options = sys.argv[2:]
+                    command_class = getattr(module, command_class_name)
+                    command_class(*options)
+                except ModuleNotFoundError:
+                    logger.error('Command  "{name}"  not found!'.format(name=command))
+
+        except KeyboardInterrupt:
+            logger.debug("Interrupted")
+
+
+if __name__ == "__main__":
+    PyUnit()
