@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='pytheons.pyunit',
-    version='1.0.2',
+    version='1.0.3',
     packages=find_packages(),
     url='https://github.com/pytheons/pyunit',
     license='MIT',
@@ -20,7 +20,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=[
-        'docopt'
+        'docopt',
         'PyYAML'
     ]
 
